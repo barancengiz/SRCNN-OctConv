@@ -28,6 +28,21 @@ def psnr(y_true, y_pred):
     return psnr
 
 
+# def subpixel(X, r, n_out_channel):
+#     """"Subpixel layer for the network. Shuffles extra layers to form squares and take the final image form.
+#     n_out_channel is 1 in most cases like YCbCr"""
+#     if n_out_channel >= 1:
+#         assert int(X.get_shape()[-1]) == (r ** 2) * n_out_channel, 'Invalid Params'
+#         bsize, a, b, c = X.get_shape().as_list()
+#         bsize = tf.shape(X)[0]  # Handling Dimension(None) type for undefined batch dim
+#         Xs = tf.split(X, r, 3)  # Split channels into r sized pieces
+#         Xr = tf .concat(Xs, 2)  # Join the pieces horizontally. b*h*(r*w)*r
+#         X = tf.reshape(Xr, (bsize, r*a, r*b, n_out_channel))  # Reshape to get the desired square form. b*(r*h)*(r*w)*c
+#     else:
+#         print('Invalid Dim.')
+#     return X
+
+
 def read_data(path_data):
     image_path_list_hr = get_filenames(path_data)
     data_raw = []
@@ -41,6 +56,15 @@ def read_data(path_data):
             # end this loop iteration and move on to next image
             continue
     return data_raw
+
+
+def read_single_data(path_data):
+    # loop through image_path_list to open each image
+    image = cv2.cvtColor(cv2.imread(path_data), cv2.COLOR_BGR2RGB)
+    if image is None:
+        print("Error loading: " + path_data)
+        # end this loop iteration and move on to next image
+    return image
 
 
 def read_data(path_list):
